@@ -3,6 +3,7 @@
 #include <QDialog>
 
 //forward declarations
+class QAudioOutput;
 class QMediaPlayer;
 class QWidget;
 class QSlider;
@@ -29,6 +30,7 @@ public:
     int stopTime;// Milliseconds
     bool loop;
     QMediaPlayer *player;//Media Player
+    QAudioOutput *audioOutput;
 
     //METHODS
     void setVolume(int _volume);

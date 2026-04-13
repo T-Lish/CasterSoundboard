@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "CasterCuePicker.h"
+#include <QAudioOutput>
 #include <QMediaPlayer>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -37,6 +38,8 @@ CasterCuePicker::CasterCuePicker(int _startTime, int _stopTime)
     stopTime = _stopTime;
     loop = false;
     player = new QMediaPlayer();
+    audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
 
     // UI
     label_StartTimeText = new QLabel("Start\nTime");
@@ -131,7 +134,7 @@ void CasterCuePicker::slider_StopTime_valueChanged(int value)
 void CasterCuePicker::button_Preview_Clicked()
 {
     //CURRENT PLAY STATE
-    if(player->state() == QMediaPlayer::PlayingState)
+    if(player->playbackState() == QMediaPlayer::PlayingState)
     {
         player->stop();
         button_Preview->setText("Preview");
@@ -171,7 +174,7 @@ QString CasterCuePicker::getTimeString(int timeInMilliseconds)
     //Current Time
     int seconds = (int) (timeInMilliseconds / 1000) % 60 ;
     int minutes = (int) ((timeInMilliseconds / (1000*60)) % 60);
-    QString time = QString("%1").arg(minutes,2,'i',0,'0') + ":" + QString("%1").arg(seconds,2,'i',0,'0');
+    QString time = QString("%1:%2").arg(minutes,2,10,'0').arg(seconds,2,10,'0');
     return time;
 }
 
@@ -179,12 +182,13 @@ QString CasterCuePicker::getTimeString(int timeInMilliseconds)
 
 void CasterCuePicker::setVolume(int _volume)
 {
-    player->setVolume(_volume);
+    printf("Volume changed to %d.\n", _volume);
+    audioOutput->setVolume(_volume);
 }
 
 void CasterCuePicker::setFilePath(QString *_filePath, int _duration, bool _loop)
 {
-    player->setMedia(QUrl::fromLocalFile(_filePath->toUtf8().constData()));
+    player->setSource(QUrl::fromLocalFile(_filePath->toUtf8().constData()));
     duration = _duration;
     loop = _loop;
 }

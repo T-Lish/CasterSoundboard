@@ -7,7 +7,7 @@ CasterPlayerState::CasterPlayerState()
 {
     //Set Default Property Values
     filePath = new QString("");
-    volume = 100;
+    volume = 1.0;
     startTime = 0;
     stopTime = 0;
     loop = false;

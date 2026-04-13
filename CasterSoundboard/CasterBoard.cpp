@@ -39,13 +39,13 @@ CasterBoard::CasterBoard(QWidget* parent) : QWidget(parent)
     QScrollArea *playersScrollArea = new QScrollArea();
     QWidget *boardWidget = new QWidget();
     QGridLayout *boardLayout = new QGridLayout();
-    boardLayout->setMargin(0);
+    boardLayout->setContentsMargins(0, 0, 0, 0);
     boardWidget->setMinimumWidth(1700);
     boardWidget->setMinimumHeight(900);
     boardWidget->setLayout(boardLayout);
     playersScrollArea->setWidget(boardWidget);
     mainLayout->addWidget(playersScrollArea, 0);
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
     //Properties
     soundBoardName = new QString("No Name");
@@ -134,11 +134,11 @@ void CasterBoard::keyReleaseEvent(QKeyEvent *event)
     if(keyboard_key_to_player_key->contains(event->key())){
         if(players->contains(keyboard_key_to_player_key->value(event->key()))){
             // Play or stop sound based on player's play state
-            if(players->value(keyboard_key_to_player_key->value(event->key()))->player->state() == QMediaPlayer::PlayingState)
+            if(players->value(keyboard_key_to_player_key->value(event->key()))->player->playbackState() == QMediaPlayer::PlayingState)
                 players->value(keyboard_key_to_player_key->value(event->key()))->stopSound();
-            else if (players->value(keyboard_key_to_player_key->value(event->key()))->player->state() == QMediaPlayer::PausedState)
+            else if (players->value(keyboard_key_to_player_key->value(event->key()))->player->playbackState() == QMediaPlayer::PausedState)
                 players->value(keyboard_key_to_player_key->value(event->key()))->playSound();
-            else if (players->value(keyboard_key_to_player_key->value(event->key()))->player->state() == QMediaPlayer::StoppedState)
+            else if (players->value(keyboard_key_to_player_key->value(event->key()))->player->playbackState() == QMediaPlayer::StoppedState)
                 players->value(keyboard_key_to_player_key->value(event->key()))->playSound();
         }
     } else {

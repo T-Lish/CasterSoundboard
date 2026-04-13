@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     //DENFINE LAYOUT
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     //INIT NEW TAB PUSH BUTTONS
     //~~New Tab~~
@@ -282,8 +282,9 @@ void MainWindow::openProfile()
         CasterBoard *cb = new CasterBoard(this);
         QFile file;
         QDataStream in;
+        bool results;
         file.setFileName(_filePath);
-        file.open(QIODevice::ReadOnly);
+        results = file.open(QIODevice::ReadOnly);
         in.setDevice(&file);
         in.setVersion(QDataStream::Qt_DefaultCompiledVersion);
         in >> *cb;
@@ -310,9 +311,10 @@ void MainWindow::saveTab()
             /* Save */
             QFile file;
             QDataStream out;
+            bool results;
 
             file.setFileName(dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->profileFilePath->toUtf8());
-            file.open(QIODevice::WriteOnly);
+            results = file.open(QIODevice::WriteOnly);
             out.setDevice(&file);
             out.setVersion(QDataStream::Qt_DefaultCompiledVersion);
             out << *dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget());
@@ -328,9 +330,10 @@ void MainWindow::saveTab()
                 /* Save Profile As... */
                 QFile file;
                 QDataStream out;
+                bool results;
 
                 file.setFileName(_filePath.toUtf8() + ".caster");
-                file.open(QIODevice::WriteOnly);
+                results = file.open(QIODevice::WriteOnly);
                 out.setDevice(&file);
                 out.setVersion(QDataStream::Qt_DefaultCompiledVersion);
                 out << *dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget());
@@ -358,9 +361,10 @@ void MainWindow::saveAsTab()
             /* Save Profile As... */
             QFile file;
             QDataStream out;
+            bool results;
 
             file.setFileName(_filePath.toUtf8() + ".caster");
-            file.open(QIODevice::WriteOnly);
+            results = file.open(QIODevice::WriteOnly);
             out.setDevice(&file);
             out.setVersion(QDataStream::Qt_DefaultCompiledVersion);
             out << *dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget());
@@ -499,7 +503,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 void MainWindow::openOSCSettings()
 {
     // Set Local IP
-    if(get_local_ip() != 0){
+    if(!get_local_ip().isEmpty()){
         QString* ip = new QString(get_local_ip().toUtf8());
         oscConfigPicker->setInBoundIPv4(ip);
     }
@@ -627,7 +631,7 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
     if(address_params.value(2) == "board")
     {
         // Is A Board Name
-        if(address_params.value(3) != 0 && address_params.value(3) != "")
+        if(!address_params.value(3).isEmpty() && address_params.value(3) != "")
         {
             //==================================
             // Check If Board Exists
@@ -635,7 +639,7 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
             int _board_index = 0;
             for(int i=0; i < mainTabContainer->count(); i++){
                 // Is Board Name Found?
-                if(dynamic_cast<CasterBoard*>(mainTabContainer->widget(i))->soundBoardName == address_params.value(3))
+                if(dynamic_cast<CasterBoard*>(mainTabContainer->widget(i))->soundBoardName->trimmed() == address_params.value(3).trimmed())
                 {
                     _boardWasFound = true;
                     _board_index = i;
@@ -651,7 +655,7 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
             if(address_params.value(4) == "player")
             {
                 // Is Player Name
-                if(address_params.value(5) != 0 && address_params.value(5) != "")
+                if(!address_params.value(5).isEmpty() && !address_params.value(5).isEmpty())
                 {
                     //==================================
                     // Check If Player Does NOT Exist
@@ -669,37 +673,37 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
                         //~~~~Execute Decoded Command~~~~
                         if(address_params.value(7) == "volume"
                                 && msg->getNumValues() == 1
-                                && address_params.value(8) == 0){
+                                && address_params.value(8).isEmpty()){
                             try{// Perform Action
                                 int _volume = 100 * msg->getValue(0)->toFloat();
                                 dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->volumeSlider->setValue(_volume);
                             } catch(...) {}// Type Casting Exception Most Likely
                         } else if (address_params.value(7) == "track_position_percent"
                                    && msg->getNumValues() == 1
-                                   && address_params.value(8) == 0){
+                                   && address_params.value(8).isEmpty()){
                             try{// Perform Action
                                 int _position = 100 * msg->getValue(0)->toFloat();
                                 dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->trackBar->setValue(_position);
                             } catch(...) {}// Type Casting Exception Most Likely
                         } else if (address_params.value(7) == "play_state"
                                    && msg->getNumValues() == 1
-                                   && address_params.value(8) != 0){// Is Player State Address
-                            if(address_params.value(8) == "play" && address_params.value(9) == 0){
+                                   && !address_params.value(8).isEmpty()){// Is Player State Address
+                            if(address_params.value(8) == "play" && address_params.value(9).isEmpty()){
                                 try{// Perform Action
                                     if(msg->getValue(0)->toInteger() == 1)
                                         dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->playSound();
                                 } catch(...){}// Type Casting Exception Most Likely
-                            } else if(address_params.value(8) == "resume" && address_params.value(9) == 0){
+                            } else if(address_params.value(8) == "resume" && address_params.value(9).isEmpty()){
                                 try{// Perform Action
                                     if(msg->getValue(0)->toInteger() == 1)
                                         dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->resumeSound();
                                 } catch(...){}// Type Casting Exception Most Likely
-                            } else if(address_params.value(8) == "pause" && address_params.value(9) == 0){
+                            } else if(address_params.value(8) == "pause" && address_params.value(9).isEmpty()){
                                 try{// Perform Action
                                     if(msg->getValue(0)->toInteger() == 1)
                                         dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->pauseSound();
                                 } catch(...){}// Type Casting Exception Most Likely
-                            } else if(address_params.value(8) == "stop" && address_params.value(9) == 0){
+                            } else if(address_params.value(8) == "stop" && address_params.value(9).isEmpty()){
                                 try{// Perform Action
                                     if(msg->getValue(0)->toInteger() == 1)
                                         dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->stopSound();
@@ -707,7 +711,7 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
                             }
                         } else if (address_params.value(7) == "loop_state"
                                    && msg->getNumValues() == 1
-                                   && address_params.value(8) == 0){
+                                   && address_params.value(8).isEmpty()){
                             try{// Perform Action (0 = no loop, 1 = loop)
                                 dynamic_cast<CasterBoard*>(mainTabContainer->widget(_board_index))->players->value(_player_key)->setLoopState(msg->getValue(0)->toInteger());
                             } catch(...){}// Type Casting Exception Most Likely
@@ -729,8 +733,8 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
             //~~~~Execute Decoded Command~~~~
             if (address_params.value(4) == "all_play_states"
                        && msg->getNumValues() == 1
-                       && address_params.value(5) != 0){// Is Global Player States Address
-                if(address_params.value(5) == "stop" && address_params.value(6) == 0){
+                       && !address_params.value(5).isEmpty()){// Is Global Player States Address
+                if(address_params.value(5) == "stop" && address_params.value(6).isEmpty()){
                     try{// Perform Action
                         if(msg->getValue(0)->toInteger() == 1)
                             this->stopAllSounds();
@@ -738,7 +742,7 @@ void MainWindow::executeOneWayOSCCommand(OscMessage *msg, QStringList address_pa
                 }
             } else if (address_params.value(4) == "audio_ducking_state"
                        && msg->getNumValues() == 1
-                       && address_params.value(5) == 0){
+                       && address_params.value(5).isEmpty()){
                 try{// Perform Action (0 = no duck, 1 = duck)
                     audio_duck_state = msg->getValue(0)->toInteger();
                     if(audio_duck_state == 0){
@@ -777,7 +781,7 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
             return;//No current board exists.
 
         // Is A Player Name
-        if(address_params.value(2) != 0 && address_params.value(2) != "")
+        if(!address_params.value(2).isEmpty() && !address_params.value(2).isEmpty())
         {
             //==================================
             // Check If Player Does NOT Exist
@@ -793,27 +797,27 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
                 //~~~~Execute Decoded Command~~~~
                 if(address_params.value(4) == "vol"
                         && msg->getNumValues() == 1
-                        && address_params.value(5) == 0){//vol = volume
+                        && address_params.value(5).isEmpty()){//vol = volume
                     try{// Perform Action
                         int _volume = 100 * msg->getValue(0)->toFloat();
                         dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->players->value(_player_key)->volumeSlider->setValue(_volume);
                     } catch(...) {}// Type Casting Exception Most Likely
                 } else if (address_params.value(4) == "t_p_p"
                            && msg->getNumValues() == 1
-                           && address_params.value(5) == 0){//t_p_p = track_position_percent
+                           && address_params.value(5).isEmpty()){//t_p_p = track_position_percent
                     try{// Perform Action
                         int _position = 100 * msg->getValue(0)->toFloat();
                         dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->players->value(_player_key)->trackBar->setValue(_position);
                     } catch(...) {}// Type Casting Exception Most Likely
                 } else if (address_params.value(4) == "p_s"
                            && msg->getNumValues() == 1
-                           && address_params.value(5) != 0){//p_s = play_state // Is Player State Address
-                    if(address_params.value(5) == "play_stop" && address_params.value(6) == 0){//
+                           && !address_params.value(5).isEmpty()){//p_s = play_state // Is Player State Address
+                    if(address_params.value(5) == "play_stop" && address_params.value(6).isEmpty()){//
                         try{// Perform Action
                             if(msg->getValue(0)->toInteger() == 1)
                                 dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->players->value(_player_key)->play_stop_toggle();
                         } catch(...){}// Type Casting Exception Most Likely
-                    } else if(address_params.value(5) == "resume_pause" && address_params.value(6) == 0){
+                    } else if(address_params.value(5) == "resume_pause" && address_params.value(6).isEmpty()){
                         try{// Perform Action
                             if(msg->getValue(0)->toInteger() == 1)
                                 dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->players->value(_player_key)->resume_pause_toggle();
@@ -821,7 +825,7 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
                     }
                 } else if (address_params.value(4) == "l_s"
                            && msg->getNumValues() == 1
-                           && address_params.value(5) == 0){//l_s = loop_state
+                           && address_params.value(5).isEmpty()){//l_s = loop_state
                     try{// Perform Action (0 = no loop, 1 = loop)
                         dynamic_cast<CasterBoard*>(mainTabContainer->currentWidget())->players->value(_player_key)->setLoopState(msg->getValue(0)->toInteger());
                     } catch(...){}// Type Casting Exception Most Likely
@@ -839,8 +843,8 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
             //~~~~Execute Decoded Command~~~~
             if (address_params.value(3) == "all_p_s"
                        && msg->getNumValues() == 1
-                       && address_params.value(4) != 0){//all_p_s = all_play_states // Is Global Player States Address
-                if(address_params.value(4) == "stop" && address_params.value(5) == 0){
+                       && !address_params.value(4).isEmpty()){//all_p_s = all_play_states // Is Global Player States Address
+                if(address_params.value(4) == "stop" && address_params.value(5).isEmpty()){
                     try{// Perform Action
                         if(msg->getValue(0)->toInteger() == 1)
                             this->stopAllSounds();
@@ -848,7 +852,7 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
                 }
             } else if (address_params.value(3) == "audio_d_s"
                        && msg->getNumValues() == 1
-                       && address_params.value(4) == 0){//audio_d_s = audio_ducking_state
+                       && address_params.value(4).isEmpty()){//audio_d_s = audio_ducking_state
                 try{// Perform Action (0 = no duck, 1 = duck)
                     audio_duck_state = msg->getValue(0)->toInteger();
                     if(audio_duck_state == 0){
@@ -870,13 +874,13 @@ void MainWindow::executeTwoWayOSCCommand(OscMessage *msg, QStringList address_pa
                 } catch(...){}// Type Casting Exception Most Likely
             } else if (address_params.value(3) == "current_tab"
                        && msg->getNumValues() == 1
-                       && address_params.value(4) != 0){
-                if(address_params.value(4) == "next" && address_params.value(5) == 0){
+                       && !address_params.value(4).isEmpty()){
+                if(address_params.value(4) == "next" && address_params.value(5).isEmpty()){
                     try{// Perform Action
                         if(msg->getValue(0)->toInteger() == 1)
                             this->switchToNextTab();
                     } catch(...){}// Type Casting Exception Most Likely
-                } else if(address_params.value(4) == "prev" && address_params.value(5) == 0){
+                } else if(address_params.value(4) == "prev" && address_params.value(5).isEmpty()){
                     try{// Perform Action
                         if(msg->getValue(0)->toInteger() == 1)
                             this->switchToPrevTab();
@@ -942,7 +946,7 @@ QString MainWindow::get_local_ip(){
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
              return address.toString();
     }
-    return 0;
+    return QString();
 }
 
 void MainWindow::syncWithOSCClient(){

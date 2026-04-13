@@ -7,7 +7,7 @@ CasterSoundboard
 
 A soundboard for hot-keying and playing back sounds. (For podcasting)
 
-CasterSoundboard is written in C++ Qt5.
+CasterSoundboard is written in C++.  This version is a port to Qt6.
 ---
 
 ## Guides
@@ -50,17 +50,17 @@ you can find installation instructions [here](https://git-scm.com)
 $ git clone https://github.com/JupiterBroadcasting/CasterSoundboard
 ```
 
-Now we need to install the qt5 development libraries and tools, the
+Now we need to install the qt6 development libraries and tools, the
 commands for various platforms are listed below:
 
 *Fedora*
 ```
-# dnf install qt5-devel make gcc gcc-c++
+# dnf install qt6-devel make gcc gcc-c++
 ```
 
 *Debian and Ubuntu*
 ```
-# apt install qtdeclarative5-dev qt5-default qtmultimedia5-dev build-essential
+# apt install qtdeclarative6-dev qt6-default qtmultimedia6-dev build-essential
 ```
 
 *Mac OSX*
@@ -68,7 +68,7 @@ commands for various platforms are listed below:
 # brew install qt
 ```
 
-You should then have access to `qmake`, `make`, and the qt5 development
+You should then have access to `qmake`, `make`, and the qt6 development
 libraries. Next `cd` into the project folder inside the repo:
 
 ```
@@ -85,7 +85,7 @@ $ qmake PREFIX=/usr
 or on Fedora:
 
 ```
-$ qmake-qt5 PREFIX=/usr
+$ qmake-qt6 PREFIX=/usr
 ```
 
 Then run `make` to build the project:
@@ -107,9 +107,9 @@ Problem: On Ubuntu you get error:
 ```
 defaultServiceProvider::requestService(): no service found for - "org.qt-project.qt.mediaplayer"
 ```
-Solution: Install missing qt5 multimedia plugins
+Solution: Install missing qt6 multimedia plugins
 ```
-sudo apt-get install libqt5multimedia5-plugins
+sudo apt-get install libqt6multimedia6-plugins
 ```
 ### Screenshot ###
 ![Alt text](/docs/img/screenshot.png?raw=true "Running on Ubuntu")
