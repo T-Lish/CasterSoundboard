@@ -247,7 +247,7 @@ void CasterPlayerWidget::setHotKeyLetter(QString hotKey)
 void CasterPlayerWidget::syncWithOSCClient()
 {
     //Update Volume
-    OscMessageComposer* msg1 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/vol", (float)(volumeSlider->value()/100.0) );
+  OscMessageComposer* msg1 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/vol", (float)(volumeSlider->value()/100.0) );
     emit updateOSCClient(msg1);
 
     //Update Track Position
