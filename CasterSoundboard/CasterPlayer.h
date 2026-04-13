@@ -24,10 +24,12 @@
 #define CASTERPLAYER_H
 #include <QWidget>
 #include <QDropEvent>
+#include <QtMultimedia/QAudioOutput>
 #include <QtMultimedia/QMediaPlayer>
 #include "libs/osc/composer/OscMessageComposer.h"
 
 //forward declarations
+class QAudioOutput;
 class QMediaPlayer;
 class QVBoxLayout;
 class QHBoxLayout;
@@ -53,6 +55,7 @@ public:
 
     //Media Player
     QMediaPlayer *player;
+    QAudioOutput *audioOutput;
     QImage *playStateImage;
 
     //contained widgets:
@@ -146,7 +149,7 @@ public slots:
     void openCuePicker();
     void toggleLooping();
     void playerPositionChanged(qint64 position);
-    void playerStateChanged(QMediaPlayer::State state);
+    void playerStateChanged(QMediaPlayer::PlaybackState state);
     void playerMetaDataChanged();
     void playerDurationChanged(qint64 _duration);
 };

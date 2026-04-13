@@ -7,9 +7,10 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QMessageBox>
-#include <QRegExp>
-#include <QRegExpValidator>
+#include <QRegularExpression> // <QRegExp>
+#include <QRegularExpressionValidator> // <QRegExpValidator>
 #include <QHostAddress>
+#include <QValidator>
 
 
 CasterOSCServerConfigPicker::CasterOSCServerConfigPicker(QString _inbound_ipv4, int _inbound_port, QString _outbound_ipv4, int _outbound_port)
@@ -25,13 +26,15 @@ CasterOSCServerConfigPicker::CasterOSCServerConfigPicker(QString _inbound_ipv4, 
 
     // Validators
     // IPv4 Validator
-    QRegExpValidator *validator_ip = new QRegExpValidator(this);
-    QRegExp rx_ip("((1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})\\.){3,3}(1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})");
-    validator_ip->setRegExp(rx_ip);
+    //QRegularExpressionValidator *validator_ip = new QRegExpValidator(this);
+    QRegularExpression rx_ip("((1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})\\.){3,3}(1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})");
+    QValidator *validator_ip = new QRegularExpressionValidator(rx_ip, this);
+    //validator_ip->setRegExp(rx_ip);
     // Port Number Validator
-    QRegExpValidator *validator_port = new QRegExpValidator(this);
-    QRegExp rx_port("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$");
-    validator_port->setRegExp(rx_port);
+    //QRegularExpressionValidator *validator_port = new QRegExpValidator(this);
+    QRegularExpression rx_port("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$");
+    QValidator *validator_port = new QRegularExpressionValidator(rx_port, this);
+    //validator_port->setRegExp(rx_port);
 
     // UI
     label_General = new QLabel("Open Sound Control server with one-way and two-way communication.\nTouchOSC app is recommended for two-way communication.\n(NOT AFFILIATED with TouchOSC).\n OSC api will be documented in the repo's wiki.");
