@@ -22,13 +22,15 @@
  */
 #include "CasterCuePicker.h"
 #include <QAudioOutput>
-#include <QMediaPlayer>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QSlider>
-#include <QLineEdit>
-#include <QPushButton>
 #include <QLabel>
+#include <QLineEdit>
+#include <QMediaPlayer>
+#include <QPushButton>
+#include <QSlider>
+#include <QVBoxLayout>
+
+
 
 CasterCuePicker::CasterCuePicker(int _startTime, int _stopTime)
 {
@@ -60,7 +62,7 @@ CasterCuePicker::CasterCuePicker(int _startTime, int _stopTime)
                                 "border: 2px solid #000000; "
                                 "width: 40px;"
                                 "margin: -8px 0px; "
-                                "} ");// Style the track bar (Touch Friendly)
+                                "} "); // Style the track bar (Touch Friendly)
     slider_StopTime = new QSlider(Qt::Horizontal);
     slider_StopTime->setStyleSheet("QSlider:horizontal {"
                                 "min-height: 30px;"
@@ -75,12 +77,12 @@ CasterCuePicker::CasterCuePicker(int _startTime, int _stopTime)
                                 "border: 2px solid #000000; "
                                 "width: 40px;"
                                 "margin: -8px 0px; "
-                                "} ");// Style the track bar (Touch Friendly)
+                                "} "); // Style the track bar (Touch Friendly)
     button_Preview = new QPushButton("Preview");
     button_Cancel = new QPushButton("Cancel");
     button_Accept = new QPushButton("Accept");
 
-    //Layout
+    // Layout
     layout_main = new QVBoxLayout(this);
     layout_startTimeWidgets = new QHBoxLayout;
     layout_stopTimeWidgets = new QHBoxLayout;
@@ -100,13 +102,13 @@ CasterCuePicker::CasterCuePicker(int _startTime, int _stopTime)
     layout_main->addLayout(layout_stopTimeWidgets);
     layout_main->addLayout(layout_buttons);
 
-    //Connect Sub-Widget Events
+    // Connect Sub-Widget Events
     connect(button_Preview,SIGNAL(clicked()),this,SLOT(button_Preview_Clicked()));
     connect(button_Cancel,SIGNAL(clicked()),this,SLOT(button_Cancel_Clicked()));
     connect(button_Accept,SIGNAL(clicked()),this,SLOT(button_Accept_Clicked()));
     connect(slider_StartTime,SIGNAL(valueChanged(int)),this,SLOT(slider_StartTime_valueChanged(int)));
     connect(slider_StopTime,SIGNAL(valueChanged(int)),this,SLOT(slider_StopTime_valueChanged(int)));
-    connect(player,SIGNAL(positionChanged(qint64)),this,SLOT(playerPositionChanged(qint64)), Qt::QueuedConnection);//thread safe calls to player->stop()
+    connect(player,SIGNAL(positionChanged(qint64)),this,SLOT(playerPositionChanged(qint64)), Qt::QueuedConnection); // thread safe calls to player->stop()
 }
 
 
@@ -133,7 +135,7 @@ void CasterCuePicker::slider_StopTime_valueChanged(int value)
 
 void CasterCuePicker::button_Preview_Clicked()
 {
-    //CURRENT PLAY STATE
+    // CURRENT PLAY STATE
     if(player->playbackState() == QMediaPlayer::PlayingState)
     {
         player->stop();
@@ -171,7 +173,7 @@ void CasterCuePicker::closeEvent(QCloseEvent *event)
 
 QString CasterCuePicker::getTimeString(int timeInMilliseconds)
 {
-    //Current Time
+    // Current Time
     int seconds = (int) (timeInMilliseconds / 1000) % 60 ;
     int minutes = (int) ((timeInMilliseconds / (1000*60)) % 60);
     QString time = QString("%1:%2").arg(minutes,2,10,'0').arg(seconds,2,10,'0');
@@ -214,7 +216,7 @@ void CasterCuePicker::playerPositionChanged(qint64 position)
         if(loop){
             player->setPosition(this->startTime);
         } else {
-            player->stop();//make sure to use Qt::QueuedConnection
+            player->stop(); // make sure to use Qt::QueuedConnection
         }
     }
 

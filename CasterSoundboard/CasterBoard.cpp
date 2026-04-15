@@ -23,12 +23,12 @@
 #include "CasterBoard.h"
 #include "CasterPlayer.h"
 #include "CasterPlayerState.h"
-#include <QVBoxLayout>
-#include <QGridLayout>
-#include <QFile>
 #include <QDataStream>
-#include <QString>
+#include <QFile>
+#include <QGridLayout>
 #include <QScrollArea>
+#include <QString>
+#include <QVBoxLayout>
 #include "libs/osc/composer/OscMessageComposer.h"
 
 //Constructor=============================================
@@ -47,7 +47,7 @@ CasterBoard::CasterBoard(QWidget* parent) : QWidget(parent)
     mainLayout->addWidget(playersScrollArea, 0);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    //Properties
+    // Properties
     soundBoardName = new QString("No Name");
     profileFilePath = new QString("");
 
@@ -93,7 +93,8 @@ CasterBoard::CasterBoard(QWidget* parent) : QWidget(parent)
         }
     }
 }
-//PUBLIC
+
+// PUBLIC
 void CasterBoard::stopAllSounds()
 {
     // Iterate through players
@@ -130,7 +131,7 @@ void CasterBoard::syncWithOSCClient()
 // PROTECTED
 void CasterBoard::keyReleaseEvent(QKeyEvent *event)
 {
-    //Handles All Hot Key Behavior
+    // Handles All Hot Key Behavior
     if(keyboard_key_to_player_key->contains(event->key())){
         if(players->contains(keyboard_key_to_player_key->value(event->key()))){
             // Play or stop sound based on player's play state
@@ -148,7 +149,7 @@ void CasterBoard::keyReleaseEvent(QKeyEvent *event)
 
 }
 
-//Public Methods
+// Public Methods
 void CasterBoard::reloadBoardFromPlayerStates()
 {
     // Iterate through players

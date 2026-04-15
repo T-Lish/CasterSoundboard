@@ -1,17 +1,17 @@
 #include "CasterOSCServerConfigPicker.h"
-#include <QMediaPlayer>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QSlider>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QLabel>
-#include <QMessageBox>
-#include <QRegularExpression> // <QRegExp>
-#include <QRegularExpressionValidator> // <QRegExpValidator>
-#include <QHostAddress>
-#include <QValidator>
 
+#include <QHBoxLayout>
+#include <QHostAddress>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMediaPlayer>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
+#include <QSlider>
+#include <QValidator>
+#include <QVBoxLayout>
 
 CasterOSCServerConfigPicker::CasterOSCServerConfigPicker(QString _inbound_ipv4, int _inbound_port, QString _outbound_ipv4, int _outbound_port)
 {
@@ -26,15 +26,12 @@ CasterOSCServerConfigPicker::CasterOSCServerConfigPicker(QString _inbound_ipv4, 
 
     // Validators
     // IPv4 Validator
-    //QRegularExpressionValidator *validator_ip = new QRegExpValidator(this);
     QRegularExpression rx_ip("((1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})\\.){3,3}(1{0,1}[0-9]{0,2}|2[0-4]{1,1}[0-9]{1,1}|25[0-5]{1,1})");
     QValidator *validator_ip = new QRegularExpressionValidator(rx_ip, this);
-    //validator_ip->setRegExp(rx_ip);
+
     // Port Number Validator
-    //QRegularExpressionValidator *validator_port = new QRegExpValidator(this);
     QRegularExpression rx_port("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$");
     QValidator *validator_port = new QRegularExpressionValidator(rx_port, this);
-    //validator_port->setRegExp(rx_port);
 
     // UI
     label_General = new QLabel("Open Sound Control server with one-way and two-way communication.\nTouchOSC app is recommended for two-way communication.\n(NOT AFFILIATED with TouchOSC).\n OSC api will be documented in the repo's wiki.");
@@ -88,7 +85,7 @@ CasterOSCServerConfigPicker::CasterOSCServerConfigPicker(QString _inbound_ipv4, 
     layout_main->addLayout(layout_outbound_controls);
     layout_main->addLayout(layout_buttons);
 
-    //Connect Sub-Widget Events
+    // Connect Sub-Widget Events
     connect(button_Cancel,SIGNAL(clicked()),this,SLOT(button_Cancel_Clicked()));
     connect(button_ToggleServer,SIGNAL(clicked()),this,SLOT(button_ToggleServer_Clicked()));
 }
@@ -101,7 +98,7 @@ void CasterOSCServerConfigPicker::closeEvent(QCloseEvent *event)
 
 //======Public Slots======
 
-//SLOTS
+// SLOTS
 void CasterOSCServerConfigPicker::button_ToggleServer_Clicked(){
     if(server_is_running){
         ok = true;
@@ -145,7 +142,7 @@ void CasterOSCServerConfigPicker::button_Cancel_Clicked(){
 
 
 //======Public Properties======
-//Inbound
+// Inbound
 void CasterOSCServerConfigPicker::setInBoundIPv4(QString *ip){
     inbound_ipv4 = ip;
     textBox_Inbound_IPv4->setText(*ip);
@@ -160,7 +157,7 @@ int CasterOSCServerConfigPicker::getInboundPort(){
     return inbound_port;
 }
 
-//Outbound
+// Outbound
 void CasterOSCServerConfigPicker::setOutBoundIPv4(QString *ip){
     outbound_ipv4 = ip;
     textBox_Outbound_IPv4->setText(*ip);

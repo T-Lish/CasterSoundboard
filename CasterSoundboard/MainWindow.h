@@ -25,42 +25,43 @@
 #include <QWidget>
 #include "libs/osc/composer/OscMessageComposer.h"
 
-//forward declarations
-class QObject;
-class CasterBoard;
-class QTabWidget;
-class QPushButton;
-class QToolBar;
-class QStatusBar;
-class QUdpSocket;
+// forward declarations
 class QByteArray;
-class OscMessage;
-class CasterOSCServerConfigPicker;
+class QObject;
+class QPushButton;
+class QStatusBar;
+class QTabWidget;
+class QToolBar;
+class QUdpSocket;
 
-class MainWindow : public QWidget //inherit from QWidget
+class CasterBoard;
+class CasterOSCServerConfigPicker;
+class OscMessage;
+
+class MainWindow : public QWidget // inherit from QWidget
 {
     Q_OBJECT
 public:
-    //Constructor
-    MainWindow(QWidget* parent = 0); //don't forget to pass the parent
+    // Constructor
+    MainWindow(QWidget* parent = 0); // don't forget to pass the parent
 
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
+    // METHODS
 
-    //WIDGETS
+    // WIDGETS
 
 
 protected:
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
-    void keyReleaseEvent(QKeyEvent *event);//Capture Hot Keys
+    // METHODS
+    void keyReleaseEvent(QKeyEvent *event); // Capture Hot Keys
 
-    //WIDGETS
+    // WIDGETS
 
 private:
-    //PROPERTIES
+    // PROPERTIES
     int audio_duck_state = 0;
     int previous_tab_index = 0;
     CasterOSCServerConfigPicker *oscConfigPicker;
@@ -70,16 +71,16 @@ private:
     QString *outbound_ipv4;
     int outbound_port = 9000;
 
-    //METHODS
-    //OSC Composer Methods
+    // METHODS
+    // OSC Composer Methods
     OscMessageComposer* writeOSCMessage(QString address, int value);
     OscMessageComposer* writeOSCMessage(QString address, float value);
     OscMessageComposer* writeOSCMessage(QString address, QString value);
-    //Utility
+    // Utility
     QString get_local_ip();
 
-    //WIDGETS
-    //Toolbar
+    // WIDGETS
+    // Toolbar
     QToolBar *mainToolbar;
     // Push Buttons
     QPushButton *addNewTabButton;
@@ -91,7 +92,7 @@ private:
     QPushButton *toggleAudioDuckingButton;
     QPushButton *openSoundControlButton;
     QPushButton *aboutButton;
-    //Lower window area
+    // Lower window area
     QTabWidget *mainTabContainer;
     // Bottom
     QStatusBar *main_statusbar;
@@ -100,10 +101,10 @@ private:
 
 
 signals:
-    //SIGNALS
+    // SIGNALS
 
 public slots:
-    //SLOTS
+    // SLOTS
     void aboutBox();
     void addNewTab();
     void mainTabContainerTabClosedRequested(int tabIndex);
@@ -121,7 +122,7 @@ public slots:
     // Board Signal Emissions Handlers
     void hotKeyExecution(QKeyEvent * event);
     void handleGlobalHotKeyEventFromCurrentWidget(QKeyEvent *event);
-    //OSC Server
+    // OSC Server
     void openOSCSettings();
     void executeOSCCommand();
     void executeOneWayOSCCommand(OscMessage* msg, QStringList address_params);

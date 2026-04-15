@@ -22,25 +22,25 @@
  */
 #ifndef CASTERBOARD_H
 #define CASTERBOARD_H
-#include <QWidget>
 #include <QDataStream>
-#include <QString>
 #include <QMap>
+#include <QString>
+#include <QWidget>
 #include "libs/osc/composer/OscMessageComposer.h"
 
-//forward declarations
+// forward declarations
 class CasterPlayerWidget;
 class QString;
 class CasterBoardState;
 
-class CasterBoard : public QWidget //inherit from QWidget
+class CasterBoard : public QWidget // inherit from QWidget
 {
     Q_OBJECT
 public:
-    //Constructor
-    CasterBoard(QWidget* parent = 0); //don't forget to pass the parent
+    // Constructor
+    CasterBoard(QWidget* parent = 0); // don't forget to pass the parent
 
-    //Properties
+    // Properties
     bool isCurrentBoard = false;
     QString *soundBoardName;
     QString *profileFilePath;
@@ -48,36 +48,36 @@ public:
     QMap<int,QString> *keyboard_key_to_player_key;
     QMap<QString, CasterPlayerWidget*> *players;
 
-    //Methods
+    // Methods
     void stopAllSounds();
     void reloadBoardFromPlayerStates();
     void setAllAudioDuckingStates(int state);
-    void syncWithOSCClient();//Refeshes UI on OSC Client
+    void syncWithOSCClient(); // Refeshes UI on OSC Client
 
 
 protected:
     //========
-    void keyReleaseEvent(QKeyEvent *event);//Capture Hot Keys
+    void keyReleaseEvent(QKeyEvent *event); // Capture Hot Keys
 
 private:
-    //Private Methods
-    //OSC Composer Methods
+    // Private Methods
+    // OSC Composer Methods
     OscMessageComposer* writeOSCMessage(QString address, int value);
     OscMessageComposer* writeOSCMessage(QString address, float value);
     OscMessageComposer* writeOSCMessage(QString address, QString value);
 
 signals:
-    //SIGNALS
-    void globalHotKeyReleasedEvent(QKeyEvent *event);//Use by mainwindow to perform actions on all sound boads. Needed because of how focus works in qt.
+    // SIGNALS
+    void globalHotKeyReleasedEvent(QKeyEvent *event); // Use by mainwindow to perform actions on all sound boards. Needed because of how focus works in qt.
     void _updateOSCClient(OscMessageComposer* message);
 
 public slots:
-    //SLOTS
+    // SLOTS
     void notifyApplicationAboutOSCMessage(OscMessageComposer* message);
 
 };
 
-//Operator Overloading
+// Operator Overloading
 QDataStream &operator<<(QDataStream &ds, const CasterBoard &cb);
 QDataStream &operator>>(QDataStream &ds, CasterBoard &cb);
 

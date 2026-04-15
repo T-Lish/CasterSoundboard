@@ -2,10 +2,10 @@
 #include "CasterPlayerState.h"
 #include <QString>
 
-//Constructor
+// Constructor
 CasterPlayerState::CasterPlayerState()
 {
-    //Set Default Property Values
+    // Set Default Property Values
     filePath = new QString("");
     volume = 100;
     startTime = 0;
@@ -20,7 +20,7 @@ CasterPlayerState::CasterPlayerState()
     backgroundCSSChanged = false;
 }
 
-//Operator Overloading
+// Operator Overloading
 QDataStream &operator<<(QDataStream &ds, const CasterPlayerState &cps)
 {
     return ds << *cps.filePath << cps.volume

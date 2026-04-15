@@ -23,25 +23,25 @@
 #include "CasterLabelColorPicker.h"
 #include "CSS.h"
 #include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QSlider>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QLabel>
+#include <QSlider>
+#include <QVBoxLayout>
 
-//CONSTRUCTOR
+// CONSTRUCTOR
 CasterLabelColorPicker::CasterLabelColorPicker()
 {
-    //SET WINDOW PROPETIES
+    // SET WINDOW PROPETIES
     this->setWindowTitle("Select Label Color");
     this->setWindowIcon(QIcon(":/res/img/app.png"));
 
-    //SET CLASS PROPERTIES
+    // SET CLASS PROPERTIES
     ok = false;
     currentCSS = Generate_CSS(HSL_C(0,0,0));
 
 
-    //INIT WIDGETS
+    // INIT WIDGETS
     label_H = new QLabel; label_H->setText("H:");
     label_S = new QLabel; label_S->setText("S:");
     label_L = new QLabel; label_L->setText("L:");
@@ -62,7 +62,7 @@ CasterLabelColorPicker::CasterLabelColorPicker()
                             "border: 2px solid #000000; "
                             "width: 40px;"
                             "margin: -8px 0px; "
-                            "} ");// Style the track bar (Touch Friendly)
+                            "} "); // Style the track bar (Touch Friendly)
     slider_S = new QSlider; slider_S->setOrientation(Qt::Horizontal); slider_S->setFixedWidth(200); slider_S->setMinimum(-100); slider_S->setMaximum(100);
     slider_S->setStyleSheet("QSlider:horizontal {"
                             "min-height: 30px;"
@@ -77,7 +77,7 @@ CasterLabelColorPicker::CasterLabelColorPicker()
                             "border: 2px solid #000000; "
                             "width: 40px;"
                             "margin: -8px 0px; "
-                            "} ");// Style the track bar (Touch Friendly)
+                            "} "); // Style the track bar (Touch Friendly)
     slider_L = new QSlider; slider_L->setOrientation(Qt::Horizontal); slider_L->setFixedWidth(200); slider_L->setMinimum(-100); slider_L->setMaximum(100);
     slider_L->setStyleSheet("QSlider:horizontal {"
                             "min-height: 30px;"
@@ -92,12 +92,12 @@ CasterLabelColorPicker::CasterLabelColorPicker()
                             "border: 2px solid #000000; "
                             "width: 40px;"
                             "margin: -8px 0px; "
-                            "} ");// Style the track bar (Touch Friendly)
+                            "} "); // Style the track bar (Touch Friendly)
     widget_Color_Label = new QWidget; widget_Color_Label->setFixedSize(150, 150); widget_Color_Label->setStyleSheet(Generate_CSS_W(HSL_C(0,0,0)));
     button_Cancel = new QPushButton("Cancel"); button_Cancel->setFixedSize(80, 30);
     button_Accept = new QPushButton("Accept"); button_Accept->setFixedSize(80, 30);
 
-    //DENFINE LAYOUT
+    // DEFINE LAYOUT
     QGridLayout *layout = new QGridLayout;
     QHBoxLayout *layout_top = new QHBoxLayout;
     QHBoxLayout *layout_preview = new QHBoxLayout;
@@ -108,7 +108,7 @@ CasterLabelColorPicker::CasterLabelColorPicker()
     QHBoxLayout *layout_bottom = new QHBoxLayout;
 
 
-    //SET LAYOUT
+    // SET LAYOUT
     layout_hsl_h->addWidget(label_H);
     layout_hsl_h->addWidget(slider_H);
     layout_hsl_h->addWidget(label_H_Value);
@@ -138,12 +138,12 @@ CasterLabelColorPicker::CasterLabelColorPicker()
 
     this->setLayout(layout);
 
-    //SET WINDOW
+    // SET WINDOW
     this->setModal(true);
     this->setFixedSize(450, 230);
     this->setLayout(layout);
 
-    //MAKE CONNECTIONS
+    // MAKE CONNECTIONS
     connect(slider_H,SIGNAL(valueChanged(int)),this,SLOT(slider_HSL_valueChanged(int)));
     connect(slider_S,SIGNAL(valueChanged(int)),this,SLOT(slider_HSL_valueChanged(int)));
     connect(slider_L,SIGNAL(valueChanged(int)),this,SLOT(slider_HSL_valueChanged(int)));
@@ -161,13 +161,13 @@ CasterLabelColorPicker::CasterLabelColorPicker()
 
 }
 
-//Properties
+// Properties
 void CasterLabelColorPicker::set_slider_H_Value(int H_Value)
 {
     slider_H_Value = H_Value;
     slider_H->setValue(slider_H_Value);
     label_H_Value->setText(QString::number(slider_H->value()));
-    //Update Diag UI
+    // Update Diag UI
     HSL_C hsl_input(slider_H->value(),slider_S->value()/100.0,slider_L->value()/100.0);
     currentCSS = QString(Generate_CSS(hsl_input));
     widget_Color_Label->setStyleSheet(Generate_CSS_W(hsl_input));
@@ -178,7 +178,7 @@ void CasterLabelColorPicker::set_slider_S_Value(int S_Value)
     slider_S_Value = S_Value;
     slider_S->setValue(slider_S_Value);
     label_S_Value->setText(QString::number(slider_S->value()).append("%"));
-    //Update Diag UI
+    // Update Diag UI
     HSL_C hsl_input(slider_H->value(),slider_S->value()/100.0,slider_L->value()/100.0);
     currentCSS = QString(Generate_CSS(hsl_input));
     widget_Color_Label->setStyleSheet(Generate_CSS_W(hsl_input));
@@ -189,7 +189,7 @@ void CasterLabelColorPicker::set_slider_L_Value(int L_Value)
     slider_L_Value = L_Value;
     slider_L->setValue(slider_L_Value);
     label_L_Value->setText(QString::number(slider_L->value()).append("%"));
-    //Update Diag UI
+    // Update Diag UI
     HSL_C hsl_input(slider_H->value(),slider_S->value()/100.0,slider_L->value()/100.0);
     currentCSS = QString(Generate_CSS(hsl_input));
     widget_Color_Label->setStyleSheet(Generate_CSS_W(hsl_input));
@@ -197,7 +197,7 @@ void CasterLabelColorPicker::set_slider_L_Value(int L_Value)
 
 
 
-//SLOTS
+// SLOTS
 void CasterLabelColorPicker::slider_HSL_valueChanged(int value)
 {
     Q_UNUSED(value);
@@ -208,7 +208,7 @@ void CasterLabelColorPicker::slider_HSL_valueChanged(int value)
     currentCSS = QString(Generate_CSS(hsl_input));
     widget_Color_Label->setStyleSheet(Generate_CSS_W(hsl_input));
 
-    //Update Slider Values
+    // Update Slider Values
     slider_H_Value = slider_H->value();
     slider_S_Value = slider_S->value();
     slider_L_Value = slider_L->value();

@@ -24,49 +24,49 @@
 #define CASTERLABELCOLORPICKER_H
 #include <QDialog>
 
-//forward declarations
-class QWidget;
-class QSlider;
+// forward declarations
+class QLabel;
 class QLineEdit;
 class QPushButton;
-class QLabel;
+class QSlider;
 class QString;
+class QWidget;
 
-class CasterLabelColorPicker : public QDialog //inherit from QWidget
+class CasterLabelColorPicker : public QDialog // inherit from QWidget
 {
     Q_OBJECT
 public:
-    //Constructor
+    // Constructor
     CasterLabelColorPicker();
 
-    //PROPERTIES
+    // PROPERTIES
     bool ok;
     QString currentCSS;
     int slider_H_Value;
     int slider_S_Value;
     int slider_L_Value;
 
-    //METHODS
+    // METHODS
     void set_slider_H_Value(int H_Value);
     void set_slider_S_Value(int S_Value);
     void set_slider_L_Value(int L_Value);
 
-    //WIDGETS
+    // WIDGETS
 
 
 protected:
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
+    // METHODS
 
-    //WIDGETS
+    // WIDGETS
 
 private:
-    //PROPERTIES
+    // PROPERTIES
 
     //METHODS
 
-    //WIDGETS
+    // WIDGETS
     QLabel *label_H;
     QLabel *label_S;
     QLabel *label_L;
@@ -82,10 +82,10 @@ private:
 
 
 signals:
-    //SIGNALS
+    // SIGNALS
 
 public slots:
-    //SLOTS
+    // SLOTS
     void slider_HSL_valueChanged(int value);
     void button_Accept_Clicked();
     void button_Cancel_Clicked();

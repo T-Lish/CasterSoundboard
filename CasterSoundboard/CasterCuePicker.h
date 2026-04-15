@@ -2,17 +2,17 @@
 #define CASTERCUEPICKER_H
 #include <QDialog>
 
-//forward declarations
+// forward declarations
 class QAudioOutput;
+class QHBoxLayout;
 class QMediaPlayer;
-class QWidget;
-class QSlider;
+class QLabel;
 class QLineEdit;
 class QPushButton;
-class QLabel;
+class QSlider;
 class QString;
 class QVBoxLayout;
-class QHBoxLayout;
+class QWidget;
 
 
 
@@ -20,42 +20,42 @@ class CasterCuePicker : public QDialog
 {
     Q_OBJECT
 public:
-    //Constructor
-    CasterCuePicker(int _startTime, int _stopTime); //don't forget to pass the parent
+    // Constructor
+    CasterCuePicker(int _startTime, int _stopTime); // don't forget to pass the parent
 
-    //PROPERTIES
-    bool ok;//DiagResult
+    // PROPERTIES
+    bool ok; // DiagResult
     int duration;
-    int startTime;// Milliseconds
-    int stopTime;// Milliseconds
+    int startTime; // Milliseconds
+    int stopTime; // Milliseconds
     bool loop;
-    QMediaPlayer *player;//Media Player
+    QMediaPlayer *player; // Media Player
     QAudioOutput *audioOutput;
 
-    //METHODS
+    // METHODS
     void setVolume(int _volume);
     void setFilePath(QString *_filePath, int _duration, bool _loop);
     void setStartTime(int _startTime);
     void setStopTime(int _stopTime);
 
-    //WIDGETS
+    // WIDGETS
 
 
 protected:
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
+    // METHODS
     void closeEvent(QCloseEvent *event);
 
-    //WIDGETS
+    // WIDGETS
 
 private:
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
+    // METHODS
     QString getTimeString(int timeInMilliseconds);
 
-    //WIDGETS
+    // WIDGETS
     QLabel *label_StartTimeText;
     QLabel *label_StopTimeText;
     QLabel *label_StartTime;
@@ -72,10 +72,10 @@ private:
     QHBoxLayout *layout_buttons;
 
 signals:
-    //SIGNALS
+    // SIGNALS
 
 public slots:
-    //SLOTS
+    // SLOTS
     void slider_StartTime_valueChanged(int value);
     void slider_StopTime_valueChanged(int value);
     void button_Preview_Clicked();

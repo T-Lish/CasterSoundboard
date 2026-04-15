@@ -26,7 +26,7 @@
 #define CSS_GRAIENT_GREY "CasterPlayerWidget{background:qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,stop:0.0 rgba(218,218,218, 255),stop:0.1 rgba(206,206,206, 255),stop:0.25 rgba(186,186,186, 255),stop:0.37 rgba(189,189,189, 255),stop:0.5 rgba(192,192,192, 255),stop:0.51 rgba(168,168,168, 255),stop:0.83 rgba(204,204,204, 255),stop:1.0 rgba(221,221,221, 255));}"
 #define CSS_GRAIENT_GREY_W "QWidget{background:qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,stop:0.0 rgba(218,218,218, 255),stop:0.1 rgba(206,206,206, 255),stop:0.25 rgba(186,186,186, 255),stop:0.37 rgba(189,189,189, 255),stop:0.5 rgba(192,192,192, 255),stop:0.51 rgba(168,168,168, 255),stop:0.83 rgba(204,204,204, 255),stop:1.0 rgba(221,221,221, 255));}"
 
-//Foward Declarations
+// Forward Declarations
 class QString;
 struct RGB_C;
 struct HSL_C;

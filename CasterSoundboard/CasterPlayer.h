@@ -22,43 +22,44 @@
  */
 #ifndef CASTERPLAYER_H
 #define CASTERPLAYER_H
-#include <QWidget>
 #include <QDropEvent>
 #include <QtMultimedia/QAudioOutput>
 #include <QtMultimedia/QMediaPlayer>
+#include <QWidget>
 #include "libs/osc/composer/OscMessageComposer.h"
 
 //forward declarations
 class QAudioOutput;
-class QMediaPlayer;
-class QVBoxLayout;
+class QImage;
 class QHBoxLayout;
 class QLabel;
+class QMediaPlayer;
 class QPushButton;
 class QSlider;
 class QString;
-class QImage;
-class CasterPlayerState;
+class QVBoxLayout;
+
 class CasterCuePicker;
 class CasterLabelColorPicker;
+class CasterPlayerState;
 
-class CasterPlayerWidget : public QWidget //inherit from QWidget
+class CasterPlayerWidget : public QWidget // inherit from QWidget
 {
     Q_OBJECT
 public:
-    //Constructor
-    CasterPlayerWidget(QWidget* parent = 0); //don't forget to pass the parent
+    // Constructor
+    CasterPlayerWidget(QWidget* parent = 0); // don't forget to pass the parent
 
-    //Set Properties
+    // Set Properties
     void setHotKeyLetter(QString hotKey);
     void syncWithOSCClient();
 
-    //Media Player
+    // Media Player
     QMediaPlayer *player;
     QAudioOutput *audioOutput;
     QImage *playStateImage;
 
-    //contained widgets:
+    // contained widgets:
     QVBoxLayout *mainLayout;
     QHBoxLayout *subMainLayoutH;
     QVBoxLayout *subMainLayoutV;
@@ -79,32 +80,32 @@ public:
     QSlider *trackBar;
     QSlider *volumeSlider;
 
-    //Player Methhods
-    void playSound();//Plays sound
-    void resumeSound();//Plays from where it left off sound
-    void pauseSound();//Pauses sound
-    void stopSound();//Stops sound
+    // Player Methhods
+    void playSound(); // Plays sound
+    void resumeSound(); // Plays from where it left off sound
+    void pauseSound(); // Pauses sound
+    void stopSound(); // Stops sound
     void play_stop_toggle();
     void resume_pause_toggle();
-    void setLoopState(int state);//Sets loop state
-    void setAudioDuckState(int state);//Set duck state
+    void setLoopState(int state); // Sets loop state
+    void setAudioDuckState(int state); // Set duck state
 
-    //Properties
+    // Properties
     QString *soundFilePath;
     QString *hotKeyLetter;
     float progress;
-    bool trackBarWasChangedByPlayer;// Used to prevent player from tiggering track bar progress changed event
+    bool trackBarWasChangedByPlayer; // Used to prevent player from tiggering track bar progress changed event
     CasterPlayerState *playerState;
 
-    //Methods
+    // Methods
     void reloadFromPlayerState();
 
 protected:
-    //Focus Event
+    // Focus Event
     void mouseMoveEvent(QMouseEvent *event);
-    //Paint Event
-    void paintEvent(QPaintEvent *event); //Overide Paint Event
-    //Drag-N-Drop Events
+    // Paint Event
+    void paintEvent(QPaintEvent *event); // Overide Paint Event
+    // Drag-N-Drop Events
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
@@ -114,30 +115,30 @@ protected:
     void mousePressEvent(QMouseEvent *event);
 
 private:
-    //Proeprties
+    // Proeprties
     QString *id;
     bool isAudioDucked;
 
-    //Private Methods
-    int getProgressWidth(); //Use to compute width of progress bar
+    // Private Methods
+    int getProgressWidth(); // Use to compute width of progress bar
 
 
     // Diag
     CasterCuePicker *cuePicker;
     CasterLabelColorPicker *colorPicker;
 
-    //Internal Properties
+    // Internal Properties
     bool newMediaLoaded;
     bool newMediaLoadedFromProfile;
 
-    //METHODS
-    //OSC Composer Methods
+    // METHODS
+    // OSC Composer Methods
     OscMessageComposer* writeOSCMessage(QString address, int value);
     OscMessageComposer* writeOSCMessage(QString address, float value);
     OscMessageComposer* writeOSCMessage(QString address, QString value);
 
 signals:
-    //MyWidget's signals....
+    // MyWidget's signals....
     void updateOSCClient(OscMessageComposer* message);
 
 public slots:

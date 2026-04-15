@@ -3,16 +3,15 @@
 #include <QDialog>
 
 //forward declarations
-class QWidget;
-class QSlider;
-class QLineEdit;
-class QPushButton;
-class QLabel;
-class QString;
-class QVBoxLayout;
 class QHBoxLayout;
 class QHostAddress;
-
+class QLabel;
+class QLineEdit;
+class QPushButton;
+class QSlider;
+class QString;
+class QVBoxLayout;
+class QWidget;
 
 
 class CasterOSCServerConfigPicker : public QDialog
@@ -24,52 +23,52 @@ public:
     static const int Action_Start_Server = 1;
     static const int Action_Kill_Server = 2;
 
-    //Constructor
+    // Constructor
     CasterOSCServerConfigPicker(QString _inbound_ipv4, int _inbound_port, QString _outbound_ipv4, int _outbound_port);
 
 
-    //PROPERTIES
-    bool ok;//DiagResult
+    // PROPERTIES
+    bool ok; // DiagResult
     int Result = 0;
 
-    //METHODS
-    //Inbound
+    // METHODS
+    // Inbound
     void setInBoundIPv4(QString *ip);
     void setInBoundPort(int port);
     int getInboundPort();
 
-    //Outbound
+    // Outbound
     void setOutBoundIPv4(QString *ip);
     QString getOutboundIPv4();
     void setOutBoundPort(int port);
     int getOutboundPort();
 
-    //MISC
+    // MISC
     void setIsServerRunning(bool isRunning);
     bool getIsServerRunning();
 
-    //WIDGETS
+    // WIDGETS
 
 
 protected:
-    //PROPERTIES
+    // PROPERTIES
 
-    //METHODS
+    // METHODS
     void closeEvent(QCloseEvent *event);
 
-    //WIDGETS
+    // WIDGETS
 
 private:
-    //PROPERTIES
+    // PROPERTIES
     bool server_is_running = false;
     QString *inbound_ipv4;
     int inbound_port = 8000;
     QString *outbound_ipv4;
     int outbound_port = 9000;
 
-    //METHODS
+    // METHODS
 
-    //WIDGETS
+    // WIDGETS
     QLabel *label_General;
     QLabel *label_Inbound;
     QLabel *label_Outbound;
@@ -89,10 +88,10 @@ private:
     QHBoxLayout *layout_buttons;
 
 signals:
-    //SIGNALS
+    // SIGNALS
 
 public slots:
-    //SLOTS
+    // SLOTS
     void button_ToggleServer_Clicked();
     void button_Cancel_Clicked();
 

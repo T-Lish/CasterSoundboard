@@ -3,20 +3,20 @@
 #include <QDataStream>
 #include <QString>
 
-//forward declarations
+// forward declarations
 class QString;
 
 class CasterPlayerState
 {
 public:
-    //Constructor
+    // Constructor
     CasterPlayerState();
 
     // Properties
     QString *filePath;
     int volume;
-    int startTime;// Milliseconds
-    int stopTime;// Milliseconds
+    int startTime; // Milliseconds
+    int stopTime; // Milliseconds
     bool loop;
     bool timeSet;
     int slider_H_Value;
@@ -26,7 +26,7 @@ public:
     bool backgroundCSSChanged;
 };
 
-//Operator Overloading
+// Operator Overloading
 QDataStream &operator<<(QDataStream &ds, const CasterPlayerState &cps);
 QDataStream &operator>>(QDataStream &ds, CasterPlayerState &cps);
 

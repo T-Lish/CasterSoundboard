@@ -26,14 +26,14 @@
 
 int main(int argc, char *argv[])
 {
-    //START APPLICATION
+    // START APPLICATION
     QApplication a(argc, argv);
-    //CREATE MAIN WINDOW
+    // CREATE MAIN WINDOW
     MainWindow *w = new MainWindow;
-    //SET MAIN WINDOW SIZE
+    // SET MAIN WINDOW SIZE
     w->resize(1000, 500);
-    //SHOW MAIN WINDOW
+    // SHOW MAIN WINDOW
     w->show();
-    //END APPLICATION
+    // END APPLICATION
     return a.exec();
 }

@@ -25,28 +25,27 @@
 #include "CasterCuePicker.h"
 #include "CasterPlayerState.h"
 #include "CSS.h"
-#include <QSizePolicy>
-#include <QString>
+#include <QBrush>
 #include <QFile>
+#include <QFileDialog>
 #include <QFileInfo>
+#include <QGraphicsDropShadowEffect>
+#include <QHBoxLayout>
+#include <QImage>
+#include <QLabel>
+#include <QLinearGradient>
+#include <QMediaMetaData>
 #include <QMessageBox>
 #include <QMimeData>
-//#include <QtMultimedia/QMediaPlayer>
-#include <QMediaMetaData>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QSlider>
-#include <QWidget>
-#include <QStyleOption>
 #include <QPainter>
-#include <QImage>
 #include <QPainterPath>
-#include <QBrush>
-#include <QLinearGradient>
-#include <QGraphicsDropShadowEffect>
-#include <QFileDialog>
+#include <QPushButton>
+#include <QSizePolicy>
+#include <QSlider>
+#include <QString>
+#include <QStyleOption>
+#include <QVBoxLayout>
+#include <QWidget>
 #include "libs/osc/composer/OscMessageComposer.h"
 
 //Constructor
@@ -61,16 +60,16 @@ CasterPlayerWidget::CasterPlayerWidget(QWidget* parent) : QWidget(parent)
     this->setMaximumWidth(200);
     this->setMaximumHeight(200);
 
-    //Set Widget Defaults
+    // Set Widget Defaults
     this->setAcceptDrops(true);
 
-    //Init Player
+    // Init Player
     player = new QMediaPlayer(this);
     audioOutput = new QAudioOutput(this);
     player->setAudioOutput(audioOutput);
     playStateImage = new QImage;
     playStateImage->load(":/res/img/playState_playing.png");
-    //Init Properties
+    // Init Properties
     playerState = new CasterPlayerState;
     soundFilePath = new QString("");
     hotKeyLetter = new QString("1");
@@ -80,15 +79,15 @@ CasterPlayerWidget::CasterPlayerWidget(QWidget* parent) : QWidget(parent)
 
     isAudioDucked = false;
 
-    //Diag
+    // Diag
     cuePicker = new CasterCuePicker(0, 0);
     colorPicker = new CasterLabelColorPicker();
 
-    //Internal Properties
+    // Internal Properties
     newMediaLoaded = false;
     newMediaLoadedFromProfile = false;
 
-    //Set-Up Widget Layout
+    // Set-Up Widget Layout
     soundNameLabel = new QLabel("<Drop File>");
     soundNameLabel->setStyleSheet("background-color:transparent;color:black;");
     soundNameLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -176,7 +175,7 @@ CasterPlayerWidget::CasterPlayerWidget(QWidget* parent) : QWidget(parent)
                                 "margin: -8px 0px; "
                                 "} ");// Style the track bar (Touch Friendly)
 
-    //Place Widgets
+    // Place Widgets
     mainLayout = new QVBoxLayout(this);
     //mainLayout->setContentsMargins(0,0,0,0);
 
@@ -216,14 +215,14 @@ CasterPlayerWidget::CasterPlayerWidget(QWidget* parent) : QWidget(parent)
     mainLayout->addLayout(subMainLayoutH);
     mainLayout->addWidget(trackBar);
 
-    //Widget Styling
+    // Widget Styling
     this->setMouseTracking(true);
     this->setStyleSheet(CSS_GRAIENT_GREY);
     QGraphicsDropShadowEffect * dse = new QGraphicsDropShadowEffect();
     dse->setBlurRadius(10);
     this->setGraphicsEffect(dse);
 
-    //Connect Sub-Widget Events
+    // Connect Sub-Widget Events
     connect(playStateButton,SIGNAL(clicked()),this,SLOT(playerToggle()));
     connect(volumeSlider,SIGNAL(valueChanged(int)),this,SLOT(volumeChanged(int)));
     connect(trackBar,SIGNAL(valueChanged(int)),this,SLOT(trackBarChanged(int)));
@@ -237,7 +236,7 @@ CasterPlayerWidget::CasterPlayerWidget(QWidget* parent) : QWidget(parent)
     connect(player,SIGNAL(durationChanged(qint64)),this,SLOT(playerDurationChanged(qint64)));
 }
 
-//Set Properties
+// Set Properties
 void CasterPlayerWidget::setHotKeyLetter(QString hotKey)
 {
     hotKeyLabel->setText(hotKey);
@@ -246,28 +245,28 @@ void CasterPlayerWidget::setHotKeyLetter(QString hotKey)
 
 void CasterPlayerWidget::syncWithOSCClient()
 {
-    //Update Volume
+    // Update Volume
   OscMessageComposer* msg1 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/vol", (float)(volumeSlider->value()/100.0) );
     emit updateOSCClient(msg1);
 
-    //Update Track Position
+    // Update Track Position
     OscMessageComposer* msg2 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/t_p_p", (float)((float)trackBar->value()/100.0) );
     emit updateOSCClient(msg2);
 
-    //Update Title
+    // Update Title
     OscMessageComposer* msg3 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/tr_name", this->soundNameLabel->text());
     emit updateOSCClient(msg3);
 
-    //Update Loop State
+    // Update Loop State
     OscMessageComposer* msg4 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/l_s", (int)(playerState->loop));
     emit updateOSCClient(msg4);
 
-    //Update Time
+    // Update Time
     QStringList times = this->timeLabel->text().split("\n");
     OscMessageComposer* msg5 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/time", times.value(0) + times.value(1));
     emit updateOSCClient(msg5);
 
-    //Update Play State
+    // Update Play State
     if(player->playbackState() == QMediaPlayer::PlayingState){
         OscMessageComposer* msg6 = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/p_s", "Playing");
         emit updateOSCClient(msg6);
@@ -288,7 +287,7 @@ void CasterPlayerWidget::syncWithOSCClient()
 //-----SLOTS----
 void CasterPlayerWidget::playerToggle()
 {
-    //CURRENT PLAY STATE TOGGLE LOGIC
+    // CURRENT PLAY STATE TOGGLE LOGIC
     volumeSlider->setValue(playerState->volume);
     if(player->playbackState() == QMediaPlayer::PlayingState)
     {
@@ -308,7 +307,7 @@ void CasterPlayerWidget::playerToggle()
 
 void CasterPlayerWidget::volumeChanged(int value)
 {
-    //Update Player Save State
+    // Update Player Save State
     playerState->volume = value;
     if(isAudioDucked)
       //player->setVolume(playerState->volume * 0.33);
@@ -317,7 +316,7 @@ void CasterPlayerWidget::volumeChanged(int value)
       //player->setVolume(playerState->volume);
       audioOutput->setVolume(playerState->volume * 0.01);
 
-    //Update OSC Client
+    // Update OSC Client
     OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/vol", (float)(volumeSlider->value()/100.0) );
     emit updateOSCClient(msg);
 }
@@ -331,7 +330,7 @@ void CasterPlayerWidget::trackBarChanged(int value)
         player->setPosition(position);
     }
 
-    //Update OSC Client
+    // Update OSC Client
     OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/t_p_p", (float)((float)trackBar->value()/100.0) );
     emit updateOSCClient(msg);
 
@@ -365,7 +364,7 @@ void CasterPlayerWidget::openFileDiag()
 
 void CasterPlayerWidget::openColorPicker()
 {
-    //OPEN SUB MENU
+    // OPEN SUB MENU
     if(playerState->backgroundCSSChanged){
         colorPicker->set_slider_H_Value(playerState->slider_H_Value);
         colorPicker->set_slider_S_Value(playerState->slider_S_Value);
@@ -401,7 +400,7 @@ void CasterPlayerWidget::openCuePicker()
     cuePicker->exec();
     if(cuePicker->ok == true)
     {
-        //Accept Changes
+        // Accept Changes
         playerState->startTime = cuePicker->startTime;
         playerState->stopTime = cuePicker->stopTime;
         playerState->timeSet = true;
@@ -416,14 +415,14 @@ void CasterPlayerWidget::toggleLooping()
         toggleLoopButton->setIcon(QIcon(":/res/img/no_loop"));
         playerState->loop = false;
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/l_s", 0);
         emit updateOSCClient(msg);
     } else {
         toggleLoopButton->setIcon(QIcon(":/res/img/loop"));
         playerState->loop = true;
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/l_s", 1);
         emit updateOSCClient(msg);
     }
@@ -433,31 +432,29 @@ void CasterPlayerWidget::playerPositionChanged(qint64 position)
 {
     if(player->duration() > 0)
     {
-        //Player State Update
+        // Player State Update
         if(!playerState->timeSet && playerState->stopTime == 0){
             playerState->stopTime = player->duration();
         }
 
-        //Current Time
+        // Current Time
         int currentTime_seconds = (int) (position / 1000) % 60 ;
         int currentTime_minutes = (int) ((position / (1000*60)) % 60);
-        //QString currentTime = "+" + QString("%1").arg(currentTime_minutes,2,'i',0,'0') + ":" + QString("%1").arg(currentTime_seconds,2,'i',0,'0');
         QString currentTime = QString("+%1:%2").arg(currentTime_minutes,2,10,'0').arg(currentTime_seconds,2,10,'0');
-        //Time Remaining
+        // Time Remaining
         progress = (float)(position) / (float)(player->duration());
         int timeLeft = player->duration() - position;
         int timeLeft_seconds = (int) (timeLeft / 1000) % 60 ;
         int timeLeft_minutes = (int) ((timeLeft / (1000*60)) % 60);
         //int hours   = (int) ((timeLeft / (1000*60*60)) % 24);
-        //QString timeRemaining = "-" + QString("%1").arg(timeLeft_minutes,2,'i',0,'0') + ":" + QString("%1").arg(timeLeft_seconds,2,'i',0,'0');
         QString timeRemaining = QString("-%1:%2").arg(timeLeft_minutes,2,10,'0').arg(timeLeft_seconds,2,10,'0');
-        timeLabel->setText(currentTime + "\n" + timeRemaining);// Set Time Remaining Label
+        timeLabel->setText(currentTime + "\n" + timeRemaining); // Set Time Remaining Label
         trackBarWasChangedByPlayer = true;
         trackBar->setValue((int)(progress * 100));
         trackBarWasChangedByPlayer = false;
         this->update();
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/time", currentTime + "/" + timeRemaining);
         emit updateOSCClient(msg);
 
@@ -468,7 +465,7 @@ void CasterPlayerWidget::playerPositionChanged(qint64 position)
                 player->setPosition(playerState->startTime);
                 player->play();
             } else {
-                player->stop();//make sure to use Qt::QueuedConnection
+                player->stop(); // make sure to use Qt::QueuedConnection
                 player->setPosition(playerState->startTime);
             }
         }
@@ -483,12 +480,12 @@ void CasterPlayerWidget::playerPositionChanged(qint64 position)
 
 void CasterPlayerWidget::playerStateChanged(QMediaPlayer::PlaybackState newState)
 {
-    //CURRENT PLAY STATE
+    // CURRENT PLAY STATE
     if(newState == QMediaPlayer::PlayingState)
     {
         playStateButton->setIcon(QIcon(":/res/img/play.png"));
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/p_s", "Playing");
         emit updateOSCClient(msg);
     }
@@ -496,7 +493,7 @@ void CasterPlayerWidget::playerStateChanged(QMediaPlayer::PlaybackState newState
     {
         playStateButton->setIcon(QIcon(":/res/img/pause.png"));
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/p_s", "Paused");
         emit updateOSCClient(msg);
     }
@@ -504,7 +501,7 @@ void CasterPlayerWidget::playerStateChanged(QMediaPlayer::PlaybackState newState
     {
         playStateButton->setIcon(QIcon(":/res/img/stop.png"));
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/p_s", "Stopped");
         emit updateOSCClient(msg);
 
@@ -512,7 +509,6 @@ void CasterPlayerWidget::playerStateChanged(QMediaPlayer::PlaybackState newState
         int timeLeft = player->duration();
         int seconds = (int) (timeLeft / 1000) % 60 ;
         int minutes = (int) ((timeLeft / (1000*60)) % 60);
-        //QString timeRemaining = "+00:00\n-" + QString("%1").arg(minutes,2,'i',0,'0') + ":" + QString("%1").arg(seconds,2,'i',0,'0');
         QString timeRemaining = QString("+00:00\n-%1:%2").arg(minutes,2,10,'0').arg(seconds,2,10,'0');
         timeLabel->setText(timeRemaining);
         this->update();
@@ -523,30 +519,30 @@ void CasterPlayerWidget::playerStateChanged(QMediaPlayer::PlaybackState newState
 
 void CasterPlayerWidget::playerMetaDataChanged()
 {
-    //Update Meta Data
+    // Update Meta Data
     QFileInfo fi(*soundFilePath);
     //if(player->metaData(QMediaMetaData::Title).toString() != "")
     if(player->metaData().value(QMediaMetaData::Title).toString() != "")
     {
-        //Use metadata title
+        // Use metadata title
         //soundNameLabel->setText(player->metaData(QMediaMetaData::Title).toString());
         soundNameLabel->setText(player->metaData().value(QMediaMetaData::Title).toString());
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/tr_name", player->metaData().value(QMediaMetaData::Title).toString());
         emit updateOSCClient(msg);
     }
     else
     {
-        //Use filename as title
+        // Use filename as title
         soundNameLabel->setText(fi.baseName());
 
-        //Update OSC Client
+        // Update OSC Client
         OscMessageComposer* msg = writeOSCMessage("/cbp/" + this->id->toUtf8() + "/m/label/tr_name", fi.baseName());
         emit updateOSCClient(msg);
     }
 
-    //Hack solution to prevent playing when when meadia loaded.
+    // Hack solution to prevent playing when when meadia loaded.
     if(newMediaLoaded)
     {
         newMediaLoaded = false;
@@ -558,7 +554,7 @@ void CasterPlayerWidget::playerMetaDataChanged()
 void CasterPlayerWidget::playerDurationChanged(qint64 _duration)
 {
     if(newMediaLoaded && !newMediaLoadedFromProfile){
-        //reset player state
+        // reset player state
         playerState->startTime = 0;
         playerState->stopTime = _duration;
         playerState->timeSet = false;
@@ -578,14 +574,14 @@ void CasterPlayerWidget::playerDurationChanged(qint64 _duration)
 
 //--------------
 
-//Private Methods
+// Private Methods
 int CasterPlayerWidget::getProgressWidth()
 {
-    //Compute Progress width
+    // Compute Progress width
     return (int)(this->progress * (float)(this->width()));
 }
 
-//Public Methods
+// Public Methods
 //===============Player Methods=================
 void CasterPlayerWidget::playSound()
 {
@@ -616,7 +612,7 @@ void CasterPlayerWidget::play_stop_toggle()
 {
     // Toggle play state
     // Play/Pause
-    //CURRENT PLAY STATE TOGGLE LOGIC
+    // CURRENT PLAY STATE TOGGLE LOGIC
     volumeSlider->setValue(playerState->volume);
     if(player->playbackState() == QMediaPlayer::PlayingState)
     {
@@ -638,7 +634,7 @@ void CasterPlayerWidget::resume_pause_toggle()
 {
     // Toggle play state
     // Play/Pause
-    //CURRENT PLAY STATE TOGGLE LOGIC
+    // CURRENT PLAY STATE TOGGLE LOGIC
     volumeSlider->setValue(playerState->volume);
     if(player->playbackState() == QMediaPlayer::PlayingState)
     {
@@ -734,7 +730,7 @@ void CasterPlayerWidget::dropEvent(QDropEvent *event)
 
 bool CasterPlayerWidget::openFiles(const QStringList& pathList)
 {
-    //Determine File Type
+    // Determine File Type
     QFileInfo fi(pathList[0]);
 
     if(fi.suffix() == "mp3" ||
@@ -749,12 +745,12 @@ bool CasterPlayerWidget::openFiles(const QStringList& pathList)
             fi.suffix() == "mpg" ||
             fi.suffix() == "wmv")
     {
-        soundFilePath = new QString(pathList[0]);//Sets File Path
+        soundFilePath = new QString(pathList[0]); // Sets File Path
         volumeSlider->setValue(playerState->volume);
         player->setSource(QUrl::fromLocalFile(soundFilePath->toUtf8().constData()));
         newMediaLoaded = true;
 
-        //Update Player Save State
+        // Update Player Save State
         playerState->filePath = soundFilePath; // Save file path to player state
 
         return true;
@@ -774,7 +770,7 @@ void CasterPlayerWidget::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event);
     // Toggle play state
     // Play/Pause
-    //CURRENT PLAY STATE TOGGLE LOGIC
+    // CURRENT PLAY STATE TOGGLE LOGIC
     volumeSlider->setValue(playerState->volume);
     if(player->playbackState() == QMediaPlayer::PlayingState)
     {
@@ -804,7 +800,7 @@ void CasterPlayerWidget::mouseMoveEvent(QMouseEvent *event)
 void CasterPlayerWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    //Make widget render it's own style sheet.
+    // Make widget render it's own style sheet.
     QStyleOption opt;
     opt.initFrom(this);
     QPainter p(this);
