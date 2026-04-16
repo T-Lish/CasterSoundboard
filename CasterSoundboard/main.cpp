@@ -28,10 +28,12 @@ int main(int argc, char *argv[])
 {
     // START APPLICATION
     QApplication a(argc, argv);
+    a.setOrganizationName("CasterSoundboard");
+    a.setApplicationName("CasterSoundboard");
     // CREATE MAIN WINDOW
     MainWindow *w = new MainWindow;
     // SET MAIN WINDOW SIZE
-    w->resize(1000, 500);
+    //w->resize(1000, 500);
     // SHOW MAIN WINDOW
     w->show();
     // END APPLICATION

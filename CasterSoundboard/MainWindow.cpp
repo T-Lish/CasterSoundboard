@@ -34,6 +34,7 @@
 #include <QNetworkInterface>
 #include <QObject>
 #include <QPushButton>
+#include <QSettings>
 #include <QStatusBar>
 #include <QString>
 #include <QStringList>
@@ -55,6 +56,15 @@
 //CONSTRUCTOR
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
+    // Settings
+    loadSettings();
+    QSettings settings;
+    const auto geometry = settings.value("geometry", QByteArray()).toByteArray();
+    if (geometry.isEmpty())
+        this->resize(1000, 500);
+    else
+        restoreGeometry(geometry);
+    
     // UDP Socket
     socket = new QUdpSocket(this);
 
@@ -493,6 +503,12 @@ void MainWindow::handleGlobalHotKeyEventFromCurrentWidget(QKeyEvent *event)
 }
 
 // PROTECTED
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    writeSettings();
+    event->accept();
+}
+
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     this->hotKeyExecution(event);
@@ -914,6 +930,21 @@ void MainWindow::sendOSCMessageToClient(OscMessageComposer* message)
     } catch(...) { }
 
     delete message;
+}
+
+//=========Global Settings========
+void MainWindow::loadSettings()
+{
+    QSettings settings;
+    const auto geometry = settings.value("geometry", QByteArray()).toByteArray();
+    
+   
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
 }
 
 //========================================================

@@ -29,6 +29,7 @@
 class QByteArray;
 class QObject;
 class QPushButton;
+class QSettings;
 class QStatusBar;
 class QTabWidget;
 class QToolBar;
@@ -56,6 +57,7 @@ protected:
     // PROPERTIES
 
     // METHODS
+    void closeEvent(QCloseEvent *event);
     void keyReleaseEvent(QKeyEvent *event); // Capture Hot Keys
 
     // WIDGETS
@@ -72,6 +74,8 @@ private:
     int outbound_port = 9000;
 
     // METHODS
+    void loadSettings();
+    void writeSettings();
     // OSC Composer Methods
     OscMessageComposer* writeOSCMessage(QString address, int value);
     OscMessageComposer* writeOSCMessage(QString address, float value);
