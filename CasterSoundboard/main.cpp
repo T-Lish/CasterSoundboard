@@ -22,16 +22,33 @@
  */
 #include "MainWindow.h"
 #include <QApplication>
+#include <QCommandLineParser>
 
 
 int main(int argc, char *argv[])
 {
     // START APPLICATION
     QApplication a(argc, argv);
-    a.setOrganizationName("CasterSoundboard");
-    a.setApplicationName("CasterSoundboard");
+    QApplication::setOrganizationName("CasterSoundboard");
+    QApplication::setApplicationName("CasterSoundboard");
+
+    // PARSE OPTIONS
+    QCommandLineParser parser;
+    parser.setApplicationDescription("A soundboard for hot-keying and playing back sounds. (For podcasting)");
+    parser.addHelpOption();
+    //parser.addVersionOption();
+    parser.addOptions({
+        {{"c", "config"},
+                QApplication::translate("cloptions",
+                                        "Use an alternate config file <configFile>."),
+                QApplication::translate("cloptions", "configFile")
+        }
+        });
+
+    parser.process(a);
+    
     // CREATE MAIN WINDOW
-    MainWindow *w = new MainWindow;
+    MainWindow *w = new MainWindow(parser.value("config"));
     // SET MAIN WINDOW SIZE
     //w->resize(1000, 500);
     // SHOW MAIN WINDOW

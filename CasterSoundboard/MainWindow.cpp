@@ -54,13 +54,21 @@
 
 
 //CONSTRUCTOR
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
+//MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
+MainWindow::MainWindow(const QString &configFile, QWidget *parent) : QWidget(parent)
 {
+    // Config
+    if (!configFile.isEmpty()) {
+        config_file = configFile;
+        settings = new QSettings(config_file, QSettings::NativeFormat);
+    } else
+        settings = new QSettings();
+    settings->setFallbacksEnabled(false);
+    
     // Settings
-    loadSettings();
-    QSettings settings;
-    const auto geometry = settings.value("geometry", QByteArray()).toByteArray();
+    const auto geometry = settings->value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty())
+        // Default size
         this->resize(1000, 500);
     else
         restoreGeometry(geometry);
@@ -179,6 +187,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     // Properties
 
+}
+
+QSettings *MainWindow::getSettings()
+{
+    return settings;
 }
 
 //SLOTS
@@ -933,18 +946,10 @@ void MainWindow::sendOSCMessageToClient(OscMessageComposer* message)
 }
 
 //=========Global Settings========
-void MainWindow::loadSettings()
-{
-    QSettings settings;
-    const auto geometry = settings.value("geometry", QByteArray()).toByteArray();
-    
-   
-}
 
 void MainWindow::writeSettings()
 {
-    QSettings settings;
-    settings.setValue("geometry", saveGeometry());
+    settings->setValue("geometry", saveGeometry());
 }
 
 //========================================================

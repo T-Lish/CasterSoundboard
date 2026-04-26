@@ -31,6 +31,7 @@ class QObject;
 class QPushButton;
 class QSettings;
 class QStatusBar;
+class QString;
 class QTabWidget;
 class QToolBar;
 class QUdpSocket;
@@ -44,9 +45,11 @@ class MainWindow : public QWidget // inherit from QWidget
     Q_OBJECT
 public:
     // Constructor
-    MainWindow(QWidget* parent = 0); // don't forget to pass the parent
+    //MainWindow(QWidget* parent = 0); // don't forget to pass the parent
+    MainWindow(const QString &configFile, QWidget* parent = 0);
 
     // PROPERTIES
+    QSettings *getSettings();
 
     // METHODS
 
@@ -63,6 +66,10 @@ protected:
     // WIDGETS
 
 private:
+    // CONFIG
+    QString config_file;
+    QSettings *settings;
+    
     // PROPERTIES
     int audio_duck_state = 0;
     int previous_tab_index = 0;
@@ -74,7 +81,6 @@ private:
     int outbound_port = 9000;
 
     // METHODS
-    void loadSettings();
     void writeSettings();
     // OSC Composer Methods
     OscMessageComposer* writeOSCMessage(QString address, int value);
