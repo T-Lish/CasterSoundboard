@@ -46,7 +46,7 @@ class MainWindow : public QWidget // inherit from QWidget
 public:
     // Constructor
     //MainWindow(QWidget* parent = 0); // don't forget to pass the parent
-    MainWindow(const QString &configFile, QWidget* parent = 0);
+    MainWindow(const QString &configFile, const QStringList &profiles, QWidget* parent = 0);
 
     // PROPERTIES
     QSettings *getSettings();
@@ -121,6 +121,7 @@ public slots:
     void saveTab();
     void saveAsTab();
     void openProfile();
+    void openProfilePath(const QString &filePath);
     void stopAllSounds();
     void renameCurrentTab();
     void toggleAudioDucking();

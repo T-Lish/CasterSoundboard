@@ -23,6 +23,7 @@
 #include "MainWindow.h"
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDebug>
 
 
 int main(int argc, char *argv[])
@@ -44,11 +45,15 @@ int main(int argc, char *argv[])
                 QApplication::translate("cloptions", "configFile")
         }
         });
+    parser.addPositionalArgument("profiles",
+                                 QCoreApplication::translate("cloptions",
+                                               "Sound Board profiles to open."),
+                                 "[profiles...]");
 
     parser.process(a);
     
     // CREATE MAIN WINDOW
-    MainWindow *w = new MainWindow(parser.value("config"));
+    MainWindow *w = new MainWindow(parser.value("config"), parser.positionalArguments());
     // SET MAIN WINDOW SIZE
     //w->resize(1000, 500);
     // SHOW MAIN WINDOW

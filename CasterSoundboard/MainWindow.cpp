@@ -55,7 +55,7 @@
 
 //CONSTRUCTOR
 //MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
-MainWindow::MainWindow(const QString &configFile, QWidget *parent) : QWidget(parent)
+MainWindow::MainWindow(const QString &configFile, const QStringList &profiles, QWidget *parent) : QWidget(parent)
 {
     // Config
     if (!configFile.isEmpty()) {
@@ -64,7 +64,7 @@ MainWindow::MainWindow(const QString &configFile, QWidget *parent) : QWidget(par
     } else
         settings = new QSettings();
     settings->setFallbacksEnabled(false);
-    
+
     // Settings
     const auto geometry = settings->value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty())
@@ -187,6 +187,11 @@ MainWindow::MainWindow(const QString &configFile, QWidget *parent) : QWidget(par
 
     // Properties
 
+    // Load command line profiles
+    for (const auto &item : profiles) {
+        //qDebug() << "Will open" << item;
+        openProfilePath(item);
+    }
 }
 
 QSettings *MainWindow::getSettings()
@@ -298,15 +303,19 @@ void MainWindow::openProfile()
     QString _filePath = QFileDialog::getOpenFileName(
             Q_NULLPTR, "Open Sound Board Profile", "",
             "Sound Board Profile (*.caster)");
+    openProfilePath(_filePath);
+}
 
-    if (!_filePath.isNull())
+void MainWindow::openProfilePath(const QString &filePath)
+{
+    if (!filePath.isNull())
     {
         // Load Profile Data
         CasterBoard *cb = new CasterBoard(this);
         QFile file;
         QDataStream in;
         bool results;
-        file.setFileName(_filePath);
+        file.setFileName(filePath);
         results = file.open(QIODevice::ReadOnly);
         in.setDevice(&file);
         in.setVersion(QDataStream::Qt_DefaultCompiledVersion);
@@ -314,7 +323,7 @@ void MainWindow::openProfile()
         file.close();
 
         // Set Save Path
-        *cb->profileFilePath = _filePath;
+        *cb->profileFilePath = filePath;
 
         // Load Profile Into New Board
         cb->reloadBoardFromPlayerStates();
